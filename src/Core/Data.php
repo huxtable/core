@@ -55,6 +55,13 @@ class Data
 				];
 			}
 		}
+		else
+		{
+			$this->meta = [
+				'nextId' => 1,
+				'uniqueKeys' => []
+			];
+		}
 	}
 
 	/**
@@ -62,17 +69,20 @@ class Data
 	 */
 	public function addRecord( array $data )
 	{
-		// Ensure no conflict with unique keys
-		foreach( $this->meta['uniqueKeys'] as $key )
+		if( isset( $this->meta['uniqueKeys'] ) )
 		{
-			foreach( $this->records as $record )
+			// Ensure no conflict with unique keys
+			foreach( $this->meta['uniqueKeys'] as $key )
 			{
-				if( isset( $record[ $key ] ) && isset( $data[ $key ] ) )
+				foreach( $this->records as $record )
 				{
-					if( $record[ $key ] == $data[ $key ] )
+					if( isset( $record[ $key ] ) && isset( $data[ $key ] ) )
 					{
-						// @todo	throw new Core\Data\UniqueKeyViolationException
-						return false;
+						if( $record[ $key ] == $data[ $key ] )
+						{
+							// @todo	throw new Core\Data\UniqueKeyViolationException
+							return false;
+						}
 					}
 				}
 			}
