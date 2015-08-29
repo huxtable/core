@@ -28,6 +28,15 @@ class Data
 	public function __construct( FileInfo $fileInfo )
 	{
 		$this->source = $fileInfo;
+
+		// Defaults
+		$defaultMeta =
+		[
+			'nextId' => 1,
+			'uniqueKeys' => [],
+			'foreignKeys' => [],
+		];
+
 		if( $this->source->isFile() )
 		{
 			$json = $this->source->getContents();
@@ -49,18 +58,12 @@ class Data
 			}
 			else
 			{
-				$this->meta = [
-					'nextId' => 1,
-					'uniqueKeys' => []
-				];
+				$this->meta = $defaultMeta;
 			}
 		}
 		else
 		{
-			$this->meta = [
-				'nextId' => 1,
-				'uniqueKeys' => []
-			];
+			$this->meta = $defaultMeta;
 		}
 	}
 
@@ -80,8 +83,7 @@ class Data
 					{
 						if( $record[ $key ] == $data[ $key ] )
 						{
-							// @todo	throw new Core\Data\UniqueKeyViolationException
-							return false;
+							throw new Data\UniqueKeyViolationException( "Violation of unique key constraint: '{$key}'" );
 						}
 					}
 				}
@@ -98,16 +100,51 @@ class Data
 	}
 
 	/**
+	 * @param	string	$source			Name of foreign source (ex., "people")
 	 * @param	array	$constraints	Array of key/value constraints (ex., "id" => 1)
-	 * @return	Huxtable\Core\Data\Record
+	 * @return	array
+	 */
+	protected function getForeignRecord( $source, array $constraints=[] )
+	{
+		// @todo	Cache foreign records instead of reading off disk every time
+
+		$sourceForeign = $this->source->parent()->child( "{$source}.json" );
+		$dataForeign = new Data( $sourceForeign );
+
+		return $dataForeign->getRecords( $constraints );
+	}
+
+	/**
+	 * @param	array	$constraints	Array of key/value constraints (ex., "id" => 1)
+	 * @return	array
 	 */
 	public function getRecords( array $constraints=[] )
 	{
-		if( count( $constraints ) > 0 )
-		{
-			$matches = [];
+		$matches = [];
 
-			foreach( $this->records as $record )
+		// @todo	Elevate this to a class property
+		$localKeys = array_keys( $this->meta['foreignKeys'] );
+
+		foreach( $this->records as &$record )
+		{
+			// Check foreign keys
+			foreach( $localKeys as $localKey )
+			{
+				if( isset( $record[ $localKey ] ) )
+				{
+					$foreignSourceName = $this->meta['foreignKeys'][ $localKey ];
+					$foreignConstraints = [ 'id' => $record[ $localKey ] ];
+
+					$foreignRecordMatches = $this->getForeignRecord( $foreignSourceName, $foreignConstraints );
+
+					if( count( $foreignRecordMatches ) == 1 )
+					{
+						$record[ $localKey ] = $foreignRecordMatches[0];
+					}
+				}
+			}
+
+			if( count( $constraints ) > 0 )
 			{
 				$isMatch = true;
 
@@ -115,19 +152,19 @@ class Data
 				{
 					$isMatch = $isMatch && (isset( $record[ $key ] ) && $record[ $key ] == $value);
 				}
-
+	
 				if( $isMatch )
 				{
 					$matches[] = $record;
 				}
 			}
+			else
+			{
+				$matches[] = $record;
+			}
+		}
 
-			return $matches;
-		}
-		else
-		{
-			return $this->records;
-		}
+		return $matches;
 	}
 
 	/**
