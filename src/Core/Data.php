@@ -133,13 +133,35 @@ class Data
 				if( isset( $record[ $localKey ] ) )
 				{
 					$foreignSourceName = $this->meta['foreignKeys'][ $localKey ];
-					$foreignConstraints = [ 'id' => $record[ $localKey ] ];
 
-					$foreignRecordMatches = $this->getForeignRecord( $foreignSourceName, $foreignConstraints );
-
-					if( count( $foreignRecordMatches ) == 1 )
+					if( is_array( $record[ $localKey ] ) )
 					{
-						$record[ $localKey ] = $foreignRecordMatches[0];
+						$foreignRecordMatches = [];
+						foreach( $record[ $localKey ] as $foreignValue )
+						{
+							$foreignConstraints = [ 'id' => $foreignValue ];
+							$results = $this->getForeignRecord( $foreignSourceName, $foreignConstraints );
+
+							if( count( $results ) > 0 )
+							{
+								$foreignRecordMatches[] = $results[0];
+							}
+						}
+
+						if( count( $foreignRecordMatches ) > 0 )
+						{
+							$record[ $localKey ] = $foreignRecordMatches;
+						}
+					}
+					else
+					{
+						$foreignConstraints = [ 'id' => $record[ $localKey ] ];
+						$foreignRecordMatches = $this->getForeignRecord( $foreignSourceName, $foreignConstraints );
+
+						if( count( $foreignRecordMatches ) == 1 )
+						{
+							$record[ $localKey ] = $foreignRecordMatches[0];
+						}
 					}
 				}
 			}
