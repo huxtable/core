@@ -8,25 +8,31 @@ namespace Huxtable\Core;
 class HTTP
 {
 	/**
-	 * @param	string	$hostname
+	 * @param	mixed	$request	Core\Request object or URL string
 	 * @return	Huxtable\HTTP\Response
 	 */
-	public function get( $hostname )
+	public function get( $request )
 	{
-		return $this->request( $hostname );
+		return $this->request( $request );
 	}
 
 	/**
-	 * @param	string					$hostname
-	 * @param	Huxtable\HTTP\Options	$options
-	 * @return	Huxtable\HTTP\Response
+	 * @param	Huxtable\Core\HTTP\Request or string	$request
+	 * @return	Huxtable\Core\HTTP\Response
 	 */
-	public function request( $hostname )
+	protected function request( $request, $method="GET" )
 	{
+		if( is_string( $request ) )
+		{
+			$request = new Request( $request );
+		}
+
 		$curl = curl_init();
 
-		curl_setopt( $curl, CURLOPT_URL, $hostname );
+		curl_setopt( $curl, CURLOPT_URL, $request->getURL() );
 		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true );
+		curl_setopt( $curl, CURLOPT_HTTPHEADER, $request->getHeaders() );
+		curl_setopt( $curl, CURLOPT_CUSTOMREQUEST, $method );
 
 		$body = curl_exec( $curl );
 		$info = curl_getinfo( $curl );
@@ -39,6 +45,22 @@ class HTTP
 
 		return new HTTP\Response( $body, $info, $error );
 	}
-}
 
-?>
+	/**
+	 * @param	mixed	$request	Core\Request object or URL string
+	 * @return	Huxtable\HTTP\Response
+	 */
+	public function post( $request )
+	{
+		return $this->request( $request, 'POST' );
+	}
+
+	/**
+	 * @param	mixed	$request	Core\Request object or URL string
+	 * @return	Huxtable\HTTP\Response
+	 */
+	public function put( $request )
+	{
+		return $this->request( $request, 'PUT' );
+	}
+}
