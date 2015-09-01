@@ -41,6 +41,14 @@ class Response
 	}
 
 	/**
+	 * @return	string
+	 */
+	public function getContentType()
+	{
+		return $this->info['content_type'];
+	}
+
+	/**
 	 * @return	array
 	 */
 	public function getError()
