@@ -65,7 +65,7 @@ class Response
 	}
 
 	/**
-	 * @return	array
+	 * @return	array|false		Returns false if there was a cURL error
 	 */
 	public function getStatus()
 	{
@@ -107,6 +107,11 @@ class Response
 			504	=> 'Gateway Timeout',
 			520	=> 'Unknown Error'
 		];
+
+		if( $this->info['http_code'] === 0 )
+		{
+			return false;
+		}
 
 		$status['code'] = $this->info['http_code'];
 		$status['message'] = $messages[ $status['code'] ];
