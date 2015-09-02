@@ -201,4 +201,34 @@ class Data
 
 		return $this->source->putContents( json_encode( $contents, JSON_PRETTY_PRINT ) );
 	}
+
+	/**
+	 * @param	array	$constraints	Array of key/value constraints (ex., "id" => 1)
+	 * @param	array	$data			Array of keys and values
+	 * @return	array
+	 */
+	public function updateRecords( array $constraints, array $data )
+	{
+		$updatedRecords = [];
+
+		// @todo	Honor uniqueness constraints
+		foreach( $this->records as &$record )
+		{
+			foreach( $constraints as $constraintKey => $constraintValue )
+			{
+				if( isset( $record[ $constraintKey ] ) && $record[ $constraintKey ] == $constraintValue )
+				{
+					foreach( $data as $dataKey => $dataValue )
+					{
+						$record[ $dataKey ] = $dataValue;
+					}
+
+					$updatedRecords[] = $record;
+				}
+			}
+		}
+
+		$this->save();
+		return $updatedRecords;
+	}
 }
