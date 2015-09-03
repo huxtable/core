@@ -90,13 +90,16 @@ class Data
 			}
 		}
 
-		$data['id'] = $this->meta['nextId'];
-		$this->records[] = $data;
+		$fields = array_flip( $this->meta['fields'] );
+
+		$newRecord = array_intersect_key( $data, $fields );
+		$newRecord['id'] = $this->meta['nextId'];
+		$this->records[] = $newRecord;
 
 		$this->meta['nextId']++;
 		$this->save();
 
-		return $data;
+		return $newRecord;
 	}
 
 	/**
