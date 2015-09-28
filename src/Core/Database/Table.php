@@ -184,6 +184,33 @@ class Table
 	}
 
 	/**
+	 * Remove $name from the table's fieldset and write the results
+	 *
+	 * @param	string	$name	Name of field
+	 * @return	self
+	 */
+	public function removeField( $name )
+	{
+		if( ($index = array_search( $name, $this->fields )) !== false )
+		{
+			unset( $this->fields[$index] );
+		}
+		// Re-index array to prevent mangled JSON
+		$this->fields = array_values( $this->fields );
+
+		foreach( $this->records as &$record )
+		{
+			if( isset( $record[$name] ) )
+			{
+				unset( $record[$name] );
+			}
+		}
+
+		$this->write();
+		return $this;
+	}
+
+	/**
 	 * @return	boolean
 	 */
 	protected function write()
