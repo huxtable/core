@@ -70,6 +70,8 @@ class Table
 	}
 
 	/**
+	 * @param	string	$key	Local key name
+	 * @param	string	$table	Name of foreign table
 	 * @return	self
 	 */
 	public function addForeignKey( $key, $table )
@@ -84,7 +86,8 @@ class Table
 	}
 
 	/**
-	 * @return	array		New record
+	 * @param	array	$data	Array of keys & values
+	 * @return	array			New record
 	 */
 	public function addRecord( array $data )
 	{
@@ -215,7 +218,7 @@ class Table
 	 */
 	protected function write()
 	{
-		$contents = 
+		$contents =
 		[
 			'meta' =>
 			[
