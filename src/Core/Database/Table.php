@@ -54,6 +54,15 @@ class Table
 		if( !in_array( $name, $this->fields ) )
 		{
 			$this->fields[] = $name;
+
+			foreach( $this->records as &$record )
+			{
+				if( !isset( $record[$name] ) )
+				{
+					$record[$name] = null;
+				}
+			}
+
 			$this->write();
 		}
 
