@@ -139,6 +139,41 @@ class Table
 	}
 
 	/**
+	 * @param	array	$constraints	Array of key/value constraints (ex., "id" => 1)
+	 * @return	array
+	 */
+	public function getRecords( array $constraints=[] )
+	{
+		$matches = [];
+
+		// @todo	Implement matching in arrays
+
+		foreach( $this->records as &$record )
+		{
+			if( count( $constraints ) > 0 )
+			{
+				$isMatch = true;
+
+				foreach( $constraints as $key => $value )
+				{
+					$isMatch = $isMatch && (isset( $record[ $key ] ) && $record[ $key ] == $value);
+				}
+
+				if( $isMatch )
+				{
+					$matches[] = $record;
+				}
+			}
+			else
+			{
+				$matches[] = $record;
+			}
+		}
+
+		return $matches;
+	}
+
+	/**
 	 * Read contents of source file into internal arrays
 	 * Note: source file contents will overwrite any internal definitions
 	 *
