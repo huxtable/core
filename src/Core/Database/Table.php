@@ -232,9 +232,10 @@ class Table
 		if( ($index = array_search( $name, $this->fields )) !== false )
 		{
 			unset( $this->fields[$index] );
+
+			// Re-index array to prevent mangled JSON
+			$this->fields = array_values( $this->fields );
 		}
-		// Re-index array to prevent mangled JSON
-		$this->fields = array_values( $this->fields );
 
 		foreach( $this->records as &$record )
 		{
