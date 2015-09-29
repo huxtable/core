@@ -250,6 +250,27 @@ class Table
 	}
 
 	/**
+	 * Remove $name from the table's fieldset and write the results
+	 *
+	 * @param	string	$name	Name of field
+	 * @return	self
+	 */
+	public function removeUniqueKey( $name )
+	{
+		if( ($index = array_search( $name, $this->uniqueKeys )) !== false )
+		{
+			unset( $this->uniqueKeys[$index] );
+
+			// Re-index array to prevent mangled JSON
+			$this->uniqueKeys = array_values( $this->uniqueKeys );
+
+			$this->write();
+		}
+
+		return $this;
+	}
+
+	/**
 	 * @return	boolean
 	 */
 	protected function write()
