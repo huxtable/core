@@ -95,42 +95,6 @@ class Table
 	}
 
 	/**
-	 * @param	array	$data	Array of keys & values
-	 * @return	array			New record
-	 */
-	public function addRecord( array $data )
-	{
-		// Ensure no conflict with unique keys
-		foreach( $this->uniqueKeys as $key )
-		{
-			foreach( $this->records as $record )
-			{
-				if( isset( $record[ $key ] ) && isset( $data[ $key ] ) )
-				{
-					if( $record[ $key ] == $data[ $key ] )
-					{
-						throw new UniqueKeyViolationException( "Violation of unique key constraint: '{$key}'" );
-					}
-				}
-			}
-		}
-
-		$newRecord['id'] = $this->nextId;
-
-		// Only insert defined fields
-		foreach( $this->fields as $field )
-		{
-			$newRecord[$field] = isset( $data[$field] ) ? $data[$field] : null;
-		}
-
-		$this->records[] = $newRecord;
-		$this->nextId++;
-
-		$this->write();
-		return $newRecord;
-	}
-
-	/**
 	 * Add an entry to the table's unique key set and write the results
 	 *
 	 * @param	string	$name	Name of field
@@ -187,6 +151,42 @@ class Table
 		}
 
 		return $this;
+	}
+
+	/**
+	 * @param	array	$data	Array of keys & values
+	 * @return	array			New record
+	 */
+	public function insert( array $data )
+	{
+		// Ensure no conflict with unique keys
+		foreach( $this->uniqueKeys as $key )
+		{
+			foreach( $this->records as $record )
+			{
+				if( isset( $record[ $key ] ) && isset( $data[ $key ] ) )
+				{
+					if( $record[ $key ] == $data[ $key ] )
+					{
+						throw new UniqueKeyViolationException( "Violation of unique key constraint: '{$key}'" );
+					}
+				}
+			}
+		}
+
+		$newRecord['id'] = $this->nextId;
+
+		// Only insert defined fields
+		foreach( $this->fields as $field )
+		{
+			$newRecord[$field] = isset( $data[$field] ) ? $data[$field] : null;
+		}
+
+		$this->records[] = $newRecord;
+		$this->nextId++;
+
+		$this->write();
+		return $newRecord;
 	}
 
 	/**
