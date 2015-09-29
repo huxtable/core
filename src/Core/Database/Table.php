@@ -304,7 +304,7 @@ class Table
 
 				foreach( $constraints as $key => $value )
 				{
-					$isMatch = $isMatch && (isset( $record[ $key ] ) && $record[ $key ] == $value);
+					$isMatch = $isMatch && (array_key_exists( $key, $record ) && $record[ $key ] == $value);
 				}
 
 				if( $isMatch )
