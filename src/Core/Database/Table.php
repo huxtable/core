@@ -148,38 +148,45 @@ class Table
 	}
 
 	/**
+	 * @todo	Implement matching in arrays
 	 * @param	array	$constraints	Array of key/value constraints (ex., "id" => 1)
-	 * @return	array
+	 * @return	self
 	 */
-	public function getRecords( array $constraints=[] )
+	public function delete( array $constraints )
 	{
+		$count = count( $this->records );
 		$matches = [];
 
-		// @todo	Implement matching in arrays
-
-		foreach( $this->records as &$record )
+		for( $i = 0; $i < $count; $i++ )
 		{
-			if( count( $constraints ) > 0 )
+			$isMatch = true;
+			$record = $this->records[$i];
+
+			foreach( $constraints as $key => $value )
 			{
-				$isMatch = true;
-
-				foreach( $constraints as $key => $value )
-				{
-					$isMatch = $isMatch && (isset( $record[ $key ] ) && $record[ $key ] == $value);
-				}
-
-				if( $isMatch )
-				{
-					$matches[] = $record;
-				}
+				$isMatch = $isMatch && (isset( $record[ $key ] ) && $record[ $key ] == $value);
 			}
-			else
+
+			if( $isMatch )
 			{
-				$matches[] = $record;
+				$matches[] = $i;
 			}
 		}
 
-		return $matches;
+		if( count( $matches ) > 0 )
+		{
+			foreach( $matches as $match )
+			{
+				unset( $this->records[$match] );
+			}
+
+			// Re-index array to prevent mangled JSON
+			$this->records = array_values( $this->records );
+
+			$this->write();
+		}
+
+		return $this;
 	}
 
 	/**
