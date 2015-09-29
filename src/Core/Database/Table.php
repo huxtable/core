@@ -32,6 +32,11 @@ class Table
 	/**
 	 * @var array
 	 */
+	protected $reservedKeys=['id'];
+
+	/**
+	 * @var array
+	 */
 	protected $uniqueKeys=[];
 
 	/**
@@ -51,6 +56,10 @@ class Table
 	 */
 	public function addField( $name )
 	{
+		if( in_array( $name, $this->reservedKeys ) )
+		{
+			return $this;
+		}
 		if( !in_array( $name, $this->fields ) )
 		{
 			$this->fields[] = $name;
