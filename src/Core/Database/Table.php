@@ -5,6 +5,7 @@
  */
 namespace Huxtable\Core\Database;
 
+use Huxtable\Core;
 use Huxtable\Core\FileInfo;
 
 class Table
@@ -327,36 +328,89 @@ class Table
 	 */
 	public function select( array $constraints=[] )
 	{
-		$matches = [];
+		$database = new Core\Database( $this->source->parent() );
+		$foreignTables = [];
 
-		// @todo	Implement matching in arrays
+		$records = $this->findRecords( $constraints );
 
-		foreach( $this->records as &$record )
+		// Only fetch foreign key data during select, not delete, update, etc.
+		foreach( $records as &$record )
 		{
-			if( count( $constraints ) > 0 )
+			foreach( $record as $key => $value )
 			{
-				$isMatch = true;
-
-				foreach( $constraints as $key => $value )
+				if( isset( $this->foreignKeys[$key] ) )
 				{
-					$isMatch = $isMatch && (array_key_exists( $key, $record ) && $record[ $key ] == $value);
-				}
+					$foreignTable = $this->foreignKeys[$key];
 
-				if( $isMatch )
-				{
-					$matches[] = $record;
+					// Recycle foreign tables rather than instantiating them each time
+					if( !isset( $foreignTables[ $foreignTable ] ) )
+					{
+						$foreignTables[ $foreignTable ] = $database->table( $foreignTable );
+					}
+
+					// Local value is an array, must replace each record in place
+					if( is_array( $value ) )
+					{
+						$newValues = [];
+
+						foreach( $value as $id )
+						{
+							$foreignMatches = $foreignTables[ $foreignTable ]->select( ['id' => $id] );
+
+							if( count( $foreignMatches ) > 0 )
+							{
+								$newValues[] = $foreignMatches[0];
+							}
+						}
+
+						$record[$key] = $newValues;
+					}
+					// Local value is a string
+					else
+					{
+						$foreignMatches = $foreignTables[ $foreignTable ]->select( ['id' => $value] );
+
+						if( count( $foreignMatches ) > 0 )
+						{
+							$record[$key] = $foreignMatches[0];
+						}
+					}
 				}
-			}
-			else
-			{
-				$matches[] = $record;
 			}
 		}
 
-		return $matches;
+		return $records;
 	}
 
 	/**
+	 * @param	array	$data			Array of field names and new values to use when updating
+	 * @param	array	$constraints	Array of key/value constraints (ex., "id" => 1)
+	 * @return	self
+	 */
+	public function update( array $data, array $constraints )
+	{
+		// Dump any fields that aren't defined in $this->fields
+		$data = array_intersect_key( $data, array_flip( $this->fields ) );
+
+		$matches = $this->findRecords( $constraints );
+
+		for( $i = 0; $i < count( $matches ); $i++ )
+		{
+			foreach( $data as $key => $value )
+			{
+				if( array_key_exists( $key, $matches[$i] ) )
+				{
+					$matches[$i][$key] = $value;
+				}
+			}
+		}
+
+		$this->write();
+	}
+
+	/**
+	 * Write JSON representation of current object state to disk
+	 *
 	 * @return	boolean
 	 */
 	protected function write()
