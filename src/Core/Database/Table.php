@@ -154,6 +154,41 @@ class Table
 	}
 
 	/**
+	 * @todo	Implement matching in arrays
+	 * @param	array	$constraints
+	 * @return	array					Array of references to matching records
+	 */
+	protected function findRecords( array $constraints=[] )
+	{
+		$matches = [];
+
+		foreach( $this->records as &$record )
+		{
+			if( count( $constraints ) > 0 )
+			{
+				$isMatch = true;
+
+				foreach( $constraints as $key => $value )
+				{
+					$isMatch = $isMatch && array_key_exists( $key, $record );
+					$isMatch = $isMatch && $record[ $key ] == $value;
+				}
+
+				if( $isMatch )
+				{
+					$matches[] = &$record;
+				}
+			}
+			else
+			{
+				$matches[] = &$record;
+			}
+		}
+
+		return $matches;
+	}
+
+	/**
 	 * @param	array	$data	Array of keys & values
 	 * @return	array			New record
 	 */
