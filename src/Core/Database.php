@@ -17,7 +17,10 @@ class Database
 	 */
 	public function __construct( FileInfo $source )
 	{
-		// @todo	Verify source exists
+		if( !$source->exists() )
+		{
+			throw new \Exception( "Data source not found '{$source}'" );
+		}
 		$this->source = $source;
 	}
 
