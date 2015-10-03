@@ -67,6 +67,14 @@ class FileInfo extends \SplFileInfo
 	}
 
 	/**
+	 * @return	boolean
+	 */
+	public function exists()
+	{
+		return file_exists( $this->getPathname() );
+	}
+
+	/**
 	 * @return	string
 	 */
 	public function getContents()
