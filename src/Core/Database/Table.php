@@ -52,10 +52,11 @@ class Table
 	/**
 	 * Add an entry to the table's fieldset and write the results
 	 *
-	 * @param	string	$name	Name of field
+	 * @param	string	$name		Name of field
+	 * @param	mixed	$value		Value to set when adding to existing records
 	 * @return	self
 	 */
-	public function addField( $name )
+	public function addField( $name, $value=null )
 	{
 		if( in_array( $name, $this->reservedKeys ) )
 		{
@@ -69,7 +70,7 @@ class Table
 			{
 				if( !isset( $record[$name] ) )
 				{
-					$record[$name] = null;
+					$record[$name] = $value;
 				}
 			}
 
