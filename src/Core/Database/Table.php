@@ -156,6 +156,14 @@ class Table
 	}
 
 	/**
+	 * @return	array
+	 */
+	public function fields()
+	{
+		return $this->fields;
+	}
+
+	/**
 	 * @todo	Implement matching in arrays
 	 * @param	array	$constraints
 	 * @return	array					Array of references to matching records
