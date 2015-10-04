@@ -332,56 +332,60 @@ class Table
 	}
 
 	/**
-	 * @param	array	$constraints	Array of key/value constraints (ex., "id" => 1)
+	 * @param	array	$constraints			Array of key/value constraints (ex., "id" => 1)
+	 * @param	boolean	$expandForeignRecords
 	 * @return	array
 	 */
-	public function select( array $constraints=[] )
+	public function select( array $constraints=[], $expandForeignRecords=true )
 	{
 		$database = new Core\Database( $this->source->parent() );
 		$foreignTables = [];
 
 		$records = $this->findRecords( $constraints );
 
-		// Only fetch foreign key data during select, not delete, update, etc.
-		foreach( $records as &$record )
+		if( $expandForeignRecords )
 		{
-			foreach( $record as $key => $value )
+			// Only fetch foreign key data during select, not delete, update, etc.
+			foreach( $records as &$record )
 			{
-				if( isset( $this->foreignKeys[$key] ) )
+				foreach( $record as $key => $value )
 				{
-					$foreignTable = $this->foreignKeys[$key];
-
-					// Recycle foreign tables rather than instantiating them each time
-					if( !isset( $foreignTables[ $foreignTable ] ) )
+					if( isset( $this->foreignKeys[$key] ) )
 					{
-						$foreignTables[ $foreignTable ] = $database->table( $foreignTable );
-					}
-
-					// Local value is an array, must replace each record in place
-					if( is_array( $value ) )
-					{
-						$newValues = [];
-
-						foreach( $value as $id )
+						$foreignTable = $this->foreignKeys[$key];
+	
+						// Recycle foreign tables rather than instantiating them each time
+						if( !isset( $foreignTables[ $foreignTable ] ) )
 						{
-							$foreignMatches = $foreignTables[ $foreignTable ]->select( ['id' => $id] );
-
+							$foreignTables[ $foreignTable ] = $database->table( $foreignTable );
+						}
+	
+						// Local value is an array, must replace each record in place
+						if( is_array( $value ) )
+						{
+							$newValues = [];
+	
+							foreach( $value as $id )
+							{
+								$foreignMatches = $foreignTables[ $foreignTable ]->select( ['id' => $id] );
+	
+								if( count( $foreignMatches ) > 0 )
+								{
+									$newValues[] = $foreignMatches[0];
+								}
+							}
+	
+							$record[$key] = $newValues;
+						}
+						// Local value is a string
+						else
+						{
+							$foreignMatches = $foreignTables[ $foreignTable ]->select( ['id' => $value] );
+	
 							if( count( $foreignMatches ) > 0 )
 							{
-								$newValues[] = $foreignMatches[0];
+								$record[$key] = $foreignMatches[0];
 							}
-						}
-
-						$record[$key] = $newValues;
-					}
-					// Local value is a string
-					else
-					{
-						$foreignMatches = $foreignTables[ $foreignTable ]->select( ['id' => $value] );
-
-						if( count( $foreignMatches ) > 0 )
-						{
-							$record[$key] = $foreignMatches[0];
 						}
 					}
 				}
