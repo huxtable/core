@@ -28,7 +28,7 @@ class Autoloader
 		if( strpos( $class, __NAMESPACE__ ) == 0 )
 		{
 			// Convert class into filename
-			$basename = str_replace( __NAMESPACE__, '', $class );
+			$basename = str_replace( __NAMESPACE__ . '\\', '', $class );
 			$basename = substr( $basename, 0, 1 ) == '\\' ? substr( $basename, 1 ) : $basename;
 			$basename = str_replace( '\\', DIRECTORY_SEPARATOR, $basename ) . '.php';
 
