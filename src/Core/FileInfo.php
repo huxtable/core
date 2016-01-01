@@ -67,6 +67,21 @@ class FileInfo extends \SplFileInfo
 	}
 
 	/**
+	 * File-type agnostic deletion
+	 *
+	 * @return	void
+	 */
+	public function delete()
+	{
+		if( $this->isDir() )
+		{
+			return $this->rmdir( true );
+		}
+
+		return $this->unlink();
+	}
+
+	/**
 	 * @return	boolean
 	 */
 	public function exists()
@@ -140,11 +155,11 @@ class FileInfo extends \SplFileInfo
 	 */
 	public function unlink()
 	{
-		if( !$this->isFile() )
+		if( $this->isFile() || $this->isLink() )
 		{
-			return false;
+			return unlink( $this->getPathname() );
 		}
 
-		return unlink( $this->getPathname() );
+		return false;
 	}
 }
