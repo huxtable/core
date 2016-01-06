@@ -49,21 +49,15 @@ class FileInfo extends \SplFileInfo
 	/**
 	 * @return	void
 	 */
-	public function copy( FileInfo $dest )
+	public function copyTo( FileInfo $dest )
 	{
-		if( $dest->isDir() )
+		if( $this->isDir() )
 		{
-			$destFile = $dest->child( $this->getFilename() );
-		}
-		else
-		{
-			$destFile = $dest;
+			exec( "cp -r '{$this}' '{$dest}'", $output, $code );
+			return $code == 0;
 		}
 
-		if( $this->isFile() )
-		{
-			copy( $this->getPathname(), $destFile->getPathname() );
-		}
+		copy( $this->getPathname(), $dest->getPathname() );
 	}
 
 	/**
