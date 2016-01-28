@@ -8,7 +8,7 @@ namespace Huxtable\Core;
 class HTTP
 {
 	/**
-	 * @param	mixed	$request	Core\Request object or URL string
+	 * @param	mixed	$request	Core\HTTP\Request object or URL string
 	 * @return	Huxtable\HTTP\Response
 	 */
 	public function get( $request )
@@ -24,7 +24,7 @@ class HTTP
 	{
 		if( is_string( $request ) )
 		{
-			$request = new Request( $request );
+			$request = new HTTP\Request( $request );
 		}
 
 		$curl = curl_init();
@@ -47,7 +47,7 @@ class HTTP
 	}
 
 	/**
-	 * @param	mixed	$request	Core\Request object or URL string
+	 * @param	mixed	$request	Core\HTTP\Request object or URL string
 	 * @return	Huxtable\HTTP\Response
 	 */
 	public function post( $request )
@@ -56,7 +56,7 @@ class HTTP
 	}
 
 	/**
-	 * @param	mixed	$request	Core\Request object or URL string
+	 * @param	mixed	$request	Core\HTTP\Request object or URL string
 	 * @return	Huxtable\HTTP\Response
 	 */
 	public function put( $request )
