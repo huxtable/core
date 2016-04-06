@@ -34,21 +34,29 @@ class Filter
 	}
 
 	/**
-	 * @param	\Closure	$rule
+	 * @param	\Closure	$closure
+	 * @param	array		$parameters
 	 * @return	self
 	 */
-	public function addExclusionRule( \Closure $rule )
+	public function addExclusionRule( \Closure $closure, array $parameters = [] )
 	{
+		$rule['closure']    = $closure;
+		$rule['parameters'] = $parameters;
+
 		$this->exclusionRules[] = $rule;
 		return $this;
 	}
 
 	/**
-	 * @param	\Closure	$rule
+	 * @param	\Closure	$closure
+	 * @param	array		$parameters
 	 * @return	self
 	 */
-	public function addInclusionRule( \Closure $rule )
+	public function addInclusionRule( \Closure $closure, array $parameters = [] )
 	{
+		$rule['closure']    = $closure;
+		$rule['parameters'] = $parameters;
+
 		$this->inclusionRules[] = $rule;
 		return $this;
 	}
@@ -110,7 +118,8 @@ class Filter
 			$shouldExclude = false;
 			foreach( $this->exclusionRules as $rule )
 			{
-				$shouldExclude = $shouldExclude || call_user_func( $rule, $file );
+				$parameters = array_merge( [$file], $rule['parameters'] );
+				$shouldExclude = $shouldExclude || call_user_func_array( $rule['closure'], $parameters );
 			}
 
 			if( !$shouldExclude )
@@ -153,7 +162,9 @@ class Filter
 			 */
 			foreach( $this->inclusionRules as $rule )
 			{
-				$shouldInclude = call_user_func( $rule, $file );
+				$parameters = array_merge( [$file], $rule['parameters'] );
+				$shouldInclude = call_user_func_array( $rule['closure'], $parameters );
+
 				if( $shouldInclude == true )
 				{
 					$result[] = $file;
