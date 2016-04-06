@@ -177,6 +177,21 @@ class Filter
 	}
 
 	/**
+	 * @param	string	$extension
+	 * @return	self
+	 */
+	public function includeFileExtension( $extension )
+	{
+		$this->addInclusionRule( function( $file, $extension )
+		{
+			return $file->getExtension() == $extension;
+		},
+		[$extension]);
+
+		return $this;
+	}
+
+	/**
 	 * @param	int		$method		self::METHOD_EXCLUDE or self::METHOD_INCLUDE
 	 * @return	self
 	 */
