@@ -56,7 +56,7 @@ class Filter
 	/**
 	 * Runs an array of files through filters and returns the result
 	 *
-	 * @param	array	$files		Array of Huxtable\Core\FileInfo objects
+	 * @param	array	$files		Array of Huxtable\Core\File\File objects
 	 * @param	int		$method		self::METHOD_EXCLUDE or self::METHOD_INCLUDE
 	 * @return	array
 	 */
@@ -83,7 +83,7 @@ class Filter
 	/**
 	 * Return all files unless they are excluded by a rule (i.e., blacklisting)
 	 *
-	 * @param	array	$files		Array of Huxtable\Core\FileInfo objects
+	 * @param	array	$files		Array of Huxtable\Core\File\File objects
 	 * @return	array
 	 */
 	protected function filterFilesByExclusion( array $files )
@@ -92,7 +92,7 @@ class Filter
 
 		foreach( $files as $file )
 		{
-			if( !($file instanceof \Huxtable\Core\FileInfo ) )
+			if( !($file instanceof \Huxtable\Core\File\File ) )
 			{
 				continue;
 			}
@@ -125,7 +125,7 @@ class Filter
 	/**
 	 * Return no files unless they are included by a rule (i.e., whitelisting)
 	 *
-	 * @param	array	$files		Array of Huxtable\Core\FileInfo objects
+	 * @param	array	$files		Array of Huxtable\Core\File\File objects
 	 * @return	array
 	 */
 	protected function filterFilesByInclusion( array $files )
@@ -134,7 +134,7 @@ class Filter
 
 		foreach( $files as $file )
 		{
-			if( !($file instanceof \Huxtable\Core\FileInfo ) )
+			if( !($file instanceof \Huxtable\Core\File\File ) )
 			{
 				continue;
 			}

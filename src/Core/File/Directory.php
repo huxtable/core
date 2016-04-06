@@ -5,9 +5,7 @@
  */
 namespace Huxtable\Core\File;
 
-use \Huxtable\Core\FileInfo;
-
-class Directory extends \Huxtable\Core\FileInfo
+class Directory extends File
 {
 	/**
 	 * @param	string	$filename
@@ -26,12 +24,12 @@ class Directory extends \Huxtable\Core\FileInfo
 
 	/**
 	 * @param	string	$name
-	 * @return	Huxtable\Core\FileInfo|self
+	 * @return	Huxtable\Core\File\File
 	 */
 	public function child( $name )
 	{
 		$filenameChild = $this->getPathname() . '/' . $name;
-		$child = new FileInfo( $filenameChild );
+		$child = new File( $filenameChild );
 
 		if( $child->isDir() )
 		{
@@ -42,7 +40,7 @@ class Directory extends \Huxtable\Core\FileInfo
 	}
 
 	/**
-	 * If $this is a directory, return an array of Huxtable\FileInfo objects
+	 * If $this is a directory, return an array of Huxtable\Core\File\File objects
 	 *   representing each child file
 	 *
 	 * Filter files by inclusion or exclusion using an instance of Filter
