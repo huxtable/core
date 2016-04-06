@@ -3,9 +3,9 @@
 /*
  * This file is part of Huxtable\Core
  */
-namespace Huxtable\Core;
+namespace Huxtable\Core\File;
 
-class FileInfo extends \SplFileInfo
+class File extends \SplFileInfo
 {
 	/**
 	 * @return	void
