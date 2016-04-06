@@ -57,7 +57,7 @@ class File extends \SplFileInfo
 	 */
 	public function parent()
 	{
-		return new self( dirname( $this->getPathname() ) );
+		return new Directory( dirname( $this->getPathname() ) );
 	}
 
 	/**
