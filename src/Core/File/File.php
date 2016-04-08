@@ -7,6 +7,9 @@ namespace Huxtable\Core\File;
 
 class File extends \SplFileInfo
 {
+	const FILE = 1;
+	const DIRECTORY = 2;
+
 	/**
 	 * @return	void
 	 */

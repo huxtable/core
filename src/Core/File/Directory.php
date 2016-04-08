@@ -31,10 +31,17 @@ class Directory extends File
 		$filenameChild = $this->getPathname() . '/' . $name;
 		$child = new File( $filenameChild );
 
-		if( $child->isDir() )
-		{
-			return new self( $filenameChild );
-		}
+		return $child;
+	}
+
+	/**
+	 * @param	string	$name
+	 * @return	Huxtable\Core\File\Directory
+	 */
+	public function childDir( $name )
+	{
+		$filenameChild = $this->getPathname() . '/' . $name;
+		$child = new Directory( $filenameChild );
 
 		return $child;
 	}
