@@ -62,6 +62,19 @@ class Filter
 	}
 
 	/**
+	 * @return	self
+	 */
+	public function excludeInvisibleFiles()
+	{
+		$this->addExclusionRule( function( $file )
+		{
+			return substr( $file->getFilename(), 0, 1 ) == '.';
+		});
+
+		return $this;
+	}
+
+	/**
 	 * Runs an array of files through filters and returns the result
 	 *
 	 * @param	array	$files		Array of Huxtable\Core\File\File objects
