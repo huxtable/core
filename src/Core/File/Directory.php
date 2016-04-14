@@ -62,7 +62,13 @@ class Directory extends File
 
 		foreach( $filenames as $filename )
 		{
-			$children[] = $this->child( $filename );
+			$child = $this->child( $filename );
+			if( $child->isDir() )
+			{
+				$child = $this->childDir( $filename );
+			}
+
+			$children[] = $child;
 		}
 
 		$filter = is_null( $filter ) ? new Filter() : $filter;
