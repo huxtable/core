@@ -56,6 +56,29 @@ class File extends \SplFileInfo
 	}
 
 	/**
+	 * Given an existing file or directory path, return a properly typed instance
+	 *
+	 * @param	string	$pathname
+	 * @return	mixed
+	 */
+	final static public function getTypedInstance( $pathname )
+	{
+		$file = new File( $pathname );
+		if( !$file->exists() )
+		{
+			return $file;
+		}
+
+		if( !$file->isDir() )
+		{
+			return $file;
+		}
+
+		$directory = new Directory( $pathname );
+		return $directory;
+	}
+
+	/**
 	 * @return	Huxtable\FileInfo
 	 */
 	public function parent()
