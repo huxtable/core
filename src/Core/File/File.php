@@ -11,17 +11,18 @@ class File extends \SplFileInfo
 	const DIRECTORY = 2;
 
 	/**
+	 * @param	Huxtable\Core\File\File		$target
 	 * @return	void
 	 */
-	public function copyTo( FileInfo $dest )
+	public function copyTo( File $target )
 	{
 		if( $this->isDir() )
 		{
-			exec( "cp -r '{$this}' '{$dest}'", $output, $code );
+			exec( "cp -r '{$this}' '{$target}'", $output, $code );
 			return $code == 0;
 		}
 
-		copy( $this->getPathname(), $dest->getPathname() );
+		copy( $this->getPathname(), $target->getPathname() );
 	}
 
 	/**
