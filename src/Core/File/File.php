@@ -11,6 +11,20 @@ class File extends \SplFileInfo
 	const DIRECTORY = 2;
 
 	/**
+	 * @param	string	$filename
+	 * @return	void
+	 */
+	public function __construct( $filename )
+	{
+		if( substr( $filename, 0, 1 ) == '~' )
+		{
+			$filename = getenv( 'HOME' ) . substr( $filename, 1 );
+		}
+
+		parent::__construct( $filename );
+	}
+
+	/**
 	 * @param	Huxtable\Core\File\File		$target
 	 * @return	void
 	 */
