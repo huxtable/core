@@ -84,7 +84,7 @@ class Directory extends File
 	 */
 	public function create()
 	{
-		$this->mkdir();
+		$this->mkdir( 0777, true );
 	}
 
 	/**
