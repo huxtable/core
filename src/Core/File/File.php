@@ -46,7 +46,7 @@ class File extends \SplFileInfo
 			$dirParent->create();
 		}
 
-		touch( $this->getRealPath() );
+		touch( $this->getPathname() );
 	}
 
 	/**
