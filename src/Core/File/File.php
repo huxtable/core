@@ -16,13 +16,7 @@ class File extends \SplFileInfo
 	 */
 	public function copyTo( File $target )
 	{
-		if( $this->isDir() )
-		{
-			exec( "cp -r '{$this}' '{$target}'", $output, $code );
-			return $code == 0;
-		}
-
-		copy( $this->getPathname(), $target->getPathname() );
+		exec( "cp -r '{$this}' '{$target}'", $output, $code );
 	}
 
 	/**
