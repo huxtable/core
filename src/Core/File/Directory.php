@@ -78,6 +78,16 @@ class Directory extends File
 	}
 
 	/**
+	 * Create a directory
+	 *
+	 * @return	void
+	 */
+	public function create()
+	{
+		$this->mkdir();
+	}
+
+	/**
 	 * File-type agnostic deletion
 	 *   Overrides parent method
 	 *

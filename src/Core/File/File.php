@@ -26,6 +26,16 @@ class File extends \SplFileInfo
 	}
 
 	/**
+	 * Create a file by touching it
+	 *
+	 * @return	void
+	 */
+	public function create()
+	{
+		touch( $this->getPathname() );
+	}
+
+	/**
 	 * File-type agnostic deletion
 	 *
 	 * @return	void
