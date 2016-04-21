@@ -40,7 +40,13 @@ class File extends \SplFileInfo
 	 */
 	public function create()
 	{
-		touch( $this->getPathname() );
+		$dirParent = $this->parent();
+		if( !$dirParent->exists() )
+		{
+			$dirParent->create();
+		}
+
+		touch( $this->getRealPath() );
 	}
 
 	/**
