@@ -104,6 +104,15 @@ class File extends \SplFileInfo
 	}
 
 	/**
+	 * @param	Huxtable\Core\File\File		$target
+	 * @return	void
+	 */
+	public function moveTo( File $target )
+	{
+		exec( "mv '{$this}' '{$target}'", $output, $code );
+	}
+
+	/**
 	 * @return	Huxtable\FileInfo
 	 */
 	public function parent()
