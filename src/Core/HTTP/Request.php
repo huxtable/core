@@ -31,7 +31,7 @@ class Request
 	}
 
 	/**
-	 * Add query string parameter
+	 * Add a single query string parameter
 	 *
 	 * @param	string	$key
 	 * @param	string	$value
@@ -40,6 +40,18 @@ class Request
 	public function addParameter( $key, $value )
 	{
 		$this->parameters[ $key ] = $value;
+		return $this;
+	}
+
+	/**
+	 * Add query string parameter
+	 *
+	 * @param	array	$parameters
+	 * @return	self	$this	For chaining
+	 */
+	public function addParameters( array $parameters )
+	{
+		$this->parameters = array_merge( $this->parameters, $parameters );
 		return $this;
 	}
 
