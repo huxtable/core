@@ -60,6 +60,14 @@ class Config
 	}
 
 	/**
+	 * @return	array
+	 */
+	public function getData()
+	{
+		return $this->data;
+	}
+
+	/**
 	 * @param	string	$key
 	 * @param	string	$value
 	 * @return	void
