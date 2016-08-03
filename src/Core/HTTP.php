@@ -11,16 +11,16 @@ class HTTP
 	 * @param	mixed	$request	Core\HTTP\Request object or URL string
 	 * @return	Huxtable\HTTP\Response
 	 */
-	public function get( $request )
+	static public function get( $request )
 	{
-		return $this->request( $request );
+		return self::request( $request );
 	}
 
 	/**
 	 * @param	Huxtable\Core\HTTP\Request or string	$request
 	 * @return	Huxtable\Core\HTTP\Response
 	 */
-	protected function request( $request, $method="GET" )
+	static protected function request( $request, $method="GET" )
 	{
 		if( is_string( $request ) )
 		{
@@ -50,17 +50,17 @@ class HTTP
 	 * @param	mixed	$request	Core\HTTP\Request object or URL string
 	 * @return	Huxtable\HTTP\Response
 	 */
-	public function post( $request )
+	static public function post( $request )
 	{
-		return $this->request( $request, 'POST' );
+		return self::request( $request, 'POST' );
 	}
 
 	/**
 	 * @param	mixed	$request	Core\HTTP\Request object or URL string
 	 * @return	Huxtable\HTTP\Response
 	 */
-	public function put( $request )
+	static public function put( $request )
 	{
-		return $this->request( $request, 'PUT' );
+		return self::request( $request, 'PUT' );
 	}
 }
