@@ -9,6 +9,7 @@ class Utils
 {
 	/**
 	 * Return a random element from the given array
+	 *
 	 * @param	array	$array
 	 * @return	mixed
 	 */
@@ -16,5 +17,21 @@ class Utils
 	{
 		$index = rand( 0, count( $array ) - 1 );
 		return $array[$index];
+	}
+
+	/**
+	 * @param	array	$array
+	 * @return	array
+	 */
+	static public function reindexArray( array $array )
+	{
+		$newArray = [];
+
+		foreach( $array as $item )
+		{
+			$newArray[] = $item;
+		}
+
+		return $newArray;
 	}
 }
