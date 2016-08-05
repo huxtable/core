@@ -190,6 +190,8 @@ class Filter
 	}
 
 	/**
+	 * A convenience method
+	 *
 	 * @param	string	$extension
 	 * @return	self
 	 */
@@ -200,6 +202,8 @@ class Filter
 			return $file->getExtension() == $extension;
 		},
 		[$extension]);
+
+		$this->setDefaultMethod( self::METHOD_INCLUDE );
 
 		return $this;
 	}
