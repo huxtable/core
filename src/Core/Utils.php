@@ -23,15 +23,14 @@ class Utils
 	 * @param	array	$array
 	 * @return	array
 	 */
-	static public function reindexArray( array $array )
+	static public function reindexArray( array &$array )
 	{
-		$newArray = [];
+		$originalArray = $array;
+		$array = [];
 
-		foreach( $array as $item )
+		foreach( $originalArray as $item )
 		{
-			$newArray[] = $item;
+			$array[] = $item;
 		}
-
-		return $newArray;
 	}
 }
