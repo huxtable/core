@@ -15,6 +15,11 @@ class Utils
 	 */
 	public static function randomElement( array $array )
 	{
+		if( count( $array ) == 0 )
+		{
+			return;
+		}
+
 		$index = rand( 0, count( $array ) - 1 );
 		return $array[$index];
 	}
