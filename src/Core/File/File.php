@@ -26,11 +26,12 @@ class File extends \SplFileInfo
 
 	/**
 	 * @param	Huxtable\Core\File\File		$target
-	 * @return	void
+	 * @return	boolean
 	 */
 	public function copyTo( File $target )
 	{
 		exec( "cp -r '{$this}' '{$target}'", $output, $code );
+		return $code == 0;
 	}
 
 	/**
@@ -46,7 +47,7 @@ class File extends \SplFileInfo
 			$dirParent->create();
 		}
 
-		touch( $this->getPathname() );
+		return touch( $this->getPathname() );
 	}
 
 	/**
@@ -110,6 +111,7 @@ class File extends \SplFileInfo
 	public function moveTo( File $target )
 	{
 		exec( "mv '{$this}' '{$target}'", $output, $code );
+		return $code == 0;
 	}
 
 	/**
