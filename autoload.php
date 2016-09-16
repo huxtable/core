@@ -14,3 +14,8 @@ $pathVendorCore	= $pathBaseCore . '/vendor';
  */
 include_once( $pathSrcCore . '/Autoloader.php' );
 Autoloader::register();
+
+/*
+ * Initialize vendor autoloading
+ */
+include_once( $pathVendorCore . '/spyc/autoload.php' );
