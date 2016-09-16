@@ -5,6 +5,8 @@
  */
 namespace Huxtable\Core\File;
 
+use \Spyc;
+
 class File extends \SplFileInfo
 {
 	const FILE = 1;
@@ -79,6 +81,21 @@ class File extends \SplFileInfo
 		}
 
 		return file_get_contents( $this->getPathname() );
+	}
+
+	/**
+	 * Treat contents as YAML, attempt to decode to array
+	 *
+	 * @return	array
+	 */
+	public function getDecodedContents()
+	{
+		if( !$this->isFile() )
+		{
+			throw new \Exception( "Could not read contents of '{$this->getPathname()}'" );
+		}
+
+		return Spyc::YAMLLoad( $this->getPathname() );
 	}
 
 	/**
