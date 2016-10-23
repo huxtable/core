@@ -34,6 +34,15 @@ class HTTP
 		curl_setopt( $curl, CURLOPT_HTTPHEADER, $request->getHeaders() );
 		curl_setopt( $curl, CURLOPT_CUSTOMREQUEST, $method );
 
+		if( $method == 'POST' )
+		{
+			$postData = $request->getPostData();
+			if( !is_null( $postData ) )
+			{
+				curl_setopt( $curl, CURLOPT_POSTFIELDS, $postData );
+			}
+		}
+
 		$body = curl_exec( $curl );
 		$info = curl_getinfo( $curl );
 		$error = [

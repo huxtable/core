@@ -18,6 +18,11 @@ class Request
 	protected $parameters=[];
 
 	/**
+	 * @var	string
+	 */
+	protected $postData;
+
+	/**
 	 * @var string
 	 */
 	protected $url='';
@@ -92,6 +97,15 @@ class Request
 	}
 
 	/**
+	 * @param
+	 * @return	void
+	 */
+	public function getPostData()
+	{
+		return $this->postData;
+	}
+
+	/**
 	 * @return	string
 	 */
 	public function getURL()
@@ -105,5 +119,13 @@ class Request
 		}
 
 		return $url;
+	}
+
+	/**
+	 * @param	string	$data
+	 */
+	public function setPostData( $postData )
+	{
+		$this->postData = $postData;
 	}
 }
